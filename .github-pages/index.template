@@ -268,11 +268,15 @@
       <div id="topbar" class="topbar">
         <label class="toggle-button">
           <input id="goalsSection-toggle" type="checkbox" onclick="toggleIcons('goalsSection')" checked>
-          <span class="button toggle-button-span">Focuses</span>
+          <span class="button toggle-button-span">National Focuses</span>
         </label>
         <label class="toggle-button">
           <input id="ideasSection-toggle" type="checkbox" onclick="toggleIcons('ideasSection')" checked>
           <span class="button toggle-button-span">Ideas</span>
+        </label>
+        <label class="toggle-button">
+          <input id="characterIdeasSection-toggle" type="checkbox" onclick="toggleIcons('characterIdeasSection')" checked>
+          <span class="button toggle-button-span">Character Ideas</span>
         </label>
         <label class="toggle-button">
           <input id="texticonsSection-toggle" type="checkbox" onclick="toggleIcons('texticonsSection')" checked>
@@ -292,11 +296,11 @@
         </label>
         <label class="toggle-button">
           <input id="decisionsSection-toggle" type="checkbox" onclick="toggleIcons('decisionsSection')" checked>
-          <span class="button toggle-button-span">Decisions</span>
+          <span class="button toggle-button-span">Decision Icons</span>
         </label>
         <label class="toggle-button">
           <input id="decisionsCatSection-toggle" type="checkbox" onclick="toggleIcons('decisionsCatSection')" checked>
-          <span class="button toggle-button-span">Decision Categories</span>
+          <span class="button toggle-button-span">Decision Category Icons</span>
         </label>
         <label class="toggle-button">
           <input id="decisionsPicsSection-toggle" type="checkbox" onclick="toggleIcons('decisionsPicsSection')" checked>
@@ -310,6 +314,10 @@
       <div id="ideasSection" class="docs-section">
         <h6 class="docs-header">Ideas (@IDEAS_NUM)</h6>
         <div class="icon-container flex flex-wrap justify-left mt-3">@IDEAS_ICONS</div>
+      </div>
+      <div id="characterIdeasSection" class="docs-section">
+        <h6 class="docs-header">Character Ideas (@CHARACTER_IDEAS_NUM)</h6>
+        <div class="icon-container flex flex-wrap justify-left mt-3">@CHARACTER_IDEAS_ICONS</div>
       </div>
       <div id="texticonsSection" class="docs-section">
         <h6 class="docs-header">Texticons (@TEXTICONS_NUM)</h6>
@@ -328,7 +336,7 @@
         <div class="icon-container flex flex-wrap justify-left mt-3">@AGENCIES_ICONS</div>
       </div>
       <div id="decisionsSection" class="docs-section">
-        <h6 class="docs-header">Decisions (@DECISIONS_NUM)</h6>
+        <h6 class="docs-header">Decision Icons (@DECISIONS_NUM)</h6>
         <div class="icon-container flex flex-wrap justify-left mt-3">@DECISIONS_ICONS</div>
       </div>
       <div id="decisionsCatSection" class="docs-section">
