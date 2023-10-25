@@ -197,11 +197,11 @@ def generate_icons_section(icons_dict, path_dicts, remove_str=None):
     return (icon_entries, icons_num)
 
 
-def generate_html(goals, ideas, character_ideas, texticons, events, news_events, agencies, decisions, decisions_cat, decisions_pics, path_dicts, title, favicon, replace_date, template_path):
+def generate_html(goals, ideas, ideas_dod, character_ideas, texticons, events, news_events, agencies, decisions, decisions_cat, decisions_pics, path_dicts, title, favicon, replace_date, template_path):
     if not template_path.exists():
         print("%s doesn't exist!" % str(template_path))
         sys.exit(1)
-    with open(template_path, 'r') as f:
+    with open(template_path, 'r', encoding="utf8") as f:
         html = f.read()
 
     goal_entries, goals_num = generate_icons_section(goals, path_dicts)
@@ -214,6 +214,12 @@ def generate_html(goals, ideas, character_ideas, texticons, events, news_events,
 
     html = html.replace('@IDEAS_ICONS', ''.join(idea_entries))
     html = html.replace('@IDEAS_NUM', str(ideas_num))
+
+    idea_dod_entries, ideas_dod_num = generate_icons_section(
+        ideas_dod, path_dicts, "GFX_idea_")
+
+    html = html.replace('@IDEAS_DOD_ICONS', ''.join(idea_dod_entries))
+    html = html.replace('@IDEAS_DOD_NUM', str(ideas_dod_num))
 
     character_idea_entries, character_ideas_num = generate_icons_section(
         character_ideas, path_dicts, "GFX_idea_")
@@ -270,7 +276,7 @@ def generate_html(goals, ideas, character_ideas, texticons, events, news_events,
         html = html.replace('@UPDATE_DATE', str(datetime.datetime.utcnow()))
 
     print("Writing %d characters to index.html..." % len(html))
-    with open('index.html', 'w') as f:
+    with open('index.html', 'w', encoding="utf8") as f:
         f.write(html)
 
 
@@ -283,6 +289,7 @@ def main():
         print(args.modified_images)
     goals, goals_files = read_gfx(args.goals)
     ideas, ideas_files = read_gfx(args.ideas)
+    ideas_dod, ideas_dod_files = read_gfx(args.ideas_dod)
     character_ideas, character_ideas_files = read_gfx(args.character_ideas)
     texticons, texticons_files = read_gfx(args.texticons)
     events, events_files = read_gfx(args.events)
@@ -291,11 +298,11 @@ def main():
     decisions, decisions_files = read_gfx(args.decisions)
     decisions_cat, decisions_cat_files = read_gfx(args.decisions_cat)
     decisions_pics, decisions_pics_files = read_gfx(args.decisions_pics)
-    path_dicts = [goals_files, ideas_files, character_ideas_files, texticons_files, events_files, news_events_files,
+    path_dicts = [goals_files, ideas_files, ideas_dod_files, character_ideas_files, texticons_files, events_files, news_events_files,
                   agencies_files, decisions_files, decisions_cat_files, decisions_pics_files]
     convert_images(path_dicts,
                    args.modified_images)
-    generate_html(goals, ideas, character_ideas, texticons, events, news_events, agencies, decisions,
+    generate_html(goals, ideas, ideas_dod, character_ideas, texticons, events, news_events, agencies, decisions,
                   decisions_cat, decisions_pics, path_dicts, args.title, args.favicon, args.replace_date, args.template_path)
     print("The following files had exceptions or other issues:")
     for f in BAD_FILES:
@@ -316,6 +323,8 @@ def setup_cli_arguments():
     parser.add_argument('--goals', nargs='*',
                         help='Paths to goals (national focus) interface gfx files', required=False)
     parser.add_argument('--ideas', nargs='*',
+                        help='Paths to ideas interface gfx files', required=False)
+    parser.add_argument('--ideas-dod', nargs='*',
                         help='Paths to ideas interface gfx files', required=False)
     parser.add_argument('--character-ideas', nargs='*',
                         help='Paths to character ideas interface gfx files', required=False)
@@ -346,6 +355,8 @@ def setup_cli_arguments():
                   for x in args.goals] if args.goals and args.goals[0] else []
     args.ideas = [Path(x)
                   for x in args.ideas] if args.ideas and args.ideas[0] else []
+    args.ideas_dod = [Path(x)
+                  for x in args.ideas_dod] if args.ideas_dod and args.ideas_dod[0] else []
     args.character_ideas = [Path(x)
                   for x in args.character_ideas] if args.character_ideas and args.character_ideas[0] else []
     args.texticons = [Path(

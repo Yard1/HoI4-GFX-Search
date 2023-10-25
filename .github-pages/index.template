@@ -279,6 +279,10 @@
           <span class="button toggle-button-span">Character Ideas</span>
         </label>
         <label class="toggle-button">
+          <input id="ideasDODSection-toggle" type="checkbox" onclick="toggleIcons('ideasDODSection')" checked>
+          <span class="button toggle-button-span">Character Ideas (DoD)</span>
+        </label>
+        <label class="toggle-button">
           <input id="texticonsSection-toggle" type="checkbox" onclick="toggleIcons('texticonsSection')" checked>
           <span class="button toggle-button-span">Texticons</span>
         </label>
@@ -318,6 +322,10 @@
       <div id="characterIdeasSection" class="docs-section">
         <h6 class="docs-header">Character Ideas (@CHARACTER_IDEAS_NUM)</h6>
         <div class="icon-container flex flex-wrap justify-left mt-3">@CHARACTER_IDEAS_ICONS</div>
+      </div>
+      <div id="ideasDODSection" class="docs-section">
+        <h6 class="docs-header">Character Ideas (DoD) (@IDEAS_DOD_NUM)</h6>
+        <div class="icon-container flex flex-wrap justify-left mt-3">@IDEAS_DOD_ICONS</div>
       </div>
       <div id="texticonsSection" class="docs-section">
         <h6 class="docs-header">Texticons (@TEXTICONS_NUM)</h6>
