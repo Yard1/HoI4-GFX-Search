@@ -22,11 +22,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import os
 import re
 import sys
-import json
-import subprocess
 import argparse
 import datetime
 import traceback
@@ -124,10 +121,16 @@ def read_gfx_file(gfx_paths):
                     noOfFrames = 1
                     match = re.search(r'\s+name\s*=\s*\"(.+?)\"',
                                       spriteType, re.IGNORECASE)
+                    if not match:
+                        match = re.search(r'\s+name\s*=\s*([^\s]+)',
+                                        spriteType, re.IGNORECASE)
                     if match:
                         name = match.group(1)
                     match = re.search(r'\s+texturefile\s*=\s*\"(.+?)\"',
                                       spriteType, re.IGNORECASE)
+                    if not match:
+                        match = re.search(r'\s+texturefile\s*=\s*([^\s]+)',
+                                        spriteType, re.IGNORECASE)
                     if match:
                         texturefile = str(match.group(1))
                         if texturefile[0] == "\\" or texturefile[0] == "/":
@@ -197,7 +200,7 @@ def generate_icons_section(icons_dict, path_dicts, remove_str=None):
     return (icon_entries, icons_num)
 
 
-def generate_html(goals, ideas, ideas_dod, character_ideas, texticons, events, news_events, agencies, decisions, decisions_cat, decisions_pics, path_dicts, title, favicon, replace_date, template_path):
+def generate_html(goals, ideas, character_ideas, texticons, events, news_events, agencies, decisions, decisions_cat, decisions_pics, path_dicts, title, favicon, replace_date, template_path):
     if not template_path.exists():
         print("%s doesn't exist!" % str(template_path))
         sys.exit(1)
@@ -214,12 +217,6 @@ def generate_html(goals, ideas, ideas_dod, character_ideas, texticons, events, n
 
     html = html.replace('@IDEAS_ICONS', ''.join(idea_entries))
     html = html.replace('@IDEAS_NUM', str(ideas_num))
-
-    idea_dod_entries, ideas_dod_num = generate_icons_section(
-        ideas_dod, path_dicts, "GFX_idea_")
-
-    html = html.replace('@IDEAS_DOD_ICONS', ''.join(idea_dod_entries))
-    html = html.replace('@IDEAS_DOD_NUM', str(ideas_dod_num))
 
     character_idea_entries, character_ideas_num = generate_icons_section(
         character_ideas, path_dicts, "GFX_idea_")
@@ -289,7 +286,6 @@ def main():
         print(args.modified_images)
     goals, goals_files = read_gfx(args.goals)
     ideas, ideas_files = read_gfx(args.ideas)
-    ideas_dod, ideas_dod_files = read_gfx(args.ideas_dod)
     character_ideas, character_ideas_files = read_gfx(args.character_ideas)
     texticons, texticons_files = read_gfx(args.texticons)
     events, events_files = read_gfx(args.events)
@@ -298,11 +294,11 @@ def main():
     decisions, decisions_files = read_gfx(args.decisions)
     decisions_cat, decisions_cat_files = read_gfx(args.decisions_cat)
     decisions_pics, decisions_pics_files = read_gfx(args.decisions_pics)
-    path_dicts = [goals_files, ideas_files, ideas_dod_files, character_ideas_files, texticons_files, events_files, news_events_files,
+    path_dicts = [goals_files, ideas_files, character_ideas_files, texticons_files, events_files, news_events_files,
                   agencies_files, decisions_files, decisions_cat_files, decisions_pics_files]
     convert_images(path_dicts,
                    args.modified_images)
-    generate_html(goals, ideas, ideas_dod, character_ideas, texticons, events, news_events, agencies, decisions,
+    generate_html(goals, ideas, character_ideas, texticons, events, news_events, agencies, decisions,
                   decisions_cat, decisions_pics, path_dicts, args.title, args.favicon, args.replace_date, args.template_path)
     print("The following files had exceptions or other issues:")
     for f in BAD_FILES:
@@ -323,8 +319,6 @@ def setup_cli_arguments():
     parser.add_argument('--goals', nargs='*',
                         help='Paths to goals (national focus) interface gfx files', required=False)
     parser.add_argument('--ideas', nargs='*',
-                        help='Paths to ideas interface gfx files', required=False)
-    parser.add_argument('--ideas-dod', nargs='*',
                         help='Paths to ideas interface gfx files', required=False)
     parser.add_argument('--character-ideas', nargs='*',
                         help='Paths to character ideas interface gfx files', required=False)
@@ -349,37 +343,39 @@ def setup_cli_arguments():
     parser.add_argument('--replace-date', default=False, action='store_true',
                         help='If used, will replace UTC date with the current one', dest="replace_date", required=False)
 
+    def _parse_paths(paths):
+        parsed_paths = []
+        if not paths:
+            return parsed_paths
+        for path in paths:
+            if not path:
+                continue
+            if Path(path).exists() and Path(path).is_dir():
+                new_paths = list(Path(path).glob("*.gfx"))
+            else:
+                new_paths = list(Path(".").glob(path))
+            print(f"Resolving {path} into {new_paths}")
+            parsed_paths.extend(new_paths)
+        return parsed_paths
+
     args = parser.parse_args()
     args.template_path = Path(args.template_path)
-    args.goals = [Path(x)
-                  for x in args.goals] if args.goals and args.goals[0] else []
-    args.ideas = [Path(x)
-                  for x in args.ideas] if args.ideas and args.ideas[0] else []
-    args.ideas_dod = [Path(x)
-                  for x in args.ideas_dod] if args.ideas_dod and args.ideas_dod[0] else []
-    args.character_ideas = [Path(x)
-                  for x in args.character_ideas] if args.character_ideas and args.character_ideas[0] else []
-    args.texticons = [Path(
-        x) for x in args.texticons] if args.texticons and args.texticons[0] else []
-    args.events = [Path(x)
-                   for x in args.events] if args.events and args.events[0] else []
-    args.news_events = [Path(
-        x) for x in args.news_events] if args.news_events and args.news_events[0] else []
-    args.agencies = [Path(
-        x) for x in args.agencies] if args.agencies and args.agencies[0] else []
-    args.decisions = [Path(
-        x) for x in args.decisions] if args.decisions and args.decisions[0] else []
-    args.decisions_cat = [Path(
-        x) for x in args.decisions_cat] if args.decisions_cat and args.decisions_cat[0] else []
-    args.decisions_pics = [Path(
-        x) for x in args.decisions_pics] if args.decisions_pics and args.decisions_pics[0] else []
+    args.goals = _parse_paths(args.goals)
+    args.ideas = _parse_paths(args.ideas)
+    args.character_ideas = _parse_paths(args.character_ideas)
+    args.texticons = _parse_paths(args.texticons)
+    args.events = _parse_paths(args.events)
+    args.news_events = _parse_paths(args.news_events)
+    args.agencies = _parse_paths(args.agencies)
+    args.decisions = _parse_paths(args.decisions)
+    args.decisions_cat = _parse_paths(args.decisions_cat)
+    args.decisions_pics = _parse_paths(args.decisions_pics)
     if args.modified_images_str:
         args.modified_images_str = [x.replace("'", "") for x in re.findall(
             r"'[^']+'", args.modified_images_str)]
         args.modified_images = args.modified_images_str
     if args.modified_images:
-        args.modified_images = [Path(
-            x) for x in args.modified_images]
+        args.modified_images = _parse_paths(args.modified_images)
     return args
 
 
