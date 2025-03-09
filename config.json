@@ -3,6 +3,7 @@
     "template_path": ".github-pages/index.template",
     "favicon": "hoi4_icon.png",
     "replace_date": true,
+    "convert_images": true,
     "sections": {
       "goals": {
         "paths": [

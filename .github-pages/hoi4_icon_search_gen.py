@@ -73,6 +73,7 @@ class IconSearchConfig:
     template_path: Path
     favicon: Optional[str]
     replace_date: bool
+    convert_images: bool
     sections: Dict[
         str, Dict[str, Any]
     ]  # Each section: {"paths": List[Path], "remove_str": Optional[str]}
@@ -115,6 +116,7 @@ def load_config(config_path: Path) -> IconSearchConfig:
         template_path=Path(data["template_path"]),
         favicon=data.get("favicon"),
         replace_date=data.get("replace_date", False),
+        convert_images=data.get("convert_images", True),
         sections=sections,
         modified_images=modified_images,
         dlcs=dlcs,
@@ -352,9 +354,9 @@ class IconSearchGenerator:
                     f" dlc-{str(sprite.dlc).lower().replace(' ', '-')}"
                     if sprite.dlc
                     else (
-                        ""
+                        " dlc-base"
                         if len(sprite_list) == 1
-                        else f" hidedlc-{str(maybe_dlc).lower().replace(' ', '-')}"
+                        else f" dlc-base hidedlc-{str(maybe_dlc).lower().replace(' ', '-')}"
                     )
                 )
                 img_src = texturefile.parent / f"{texturefile.stem}.png"
@@ -383,7 +385,7 @@ class IconSearchGenerator:
     def generate_dlc_checkboxes(self) -> List[str]:
         """Generate HTML checkboxes for each DLC."""
         entries = []
-        for dlc in self.config.dlcs:
+        for dlc in ["Base"] + self.config.dlcs:
             normalized = str(dlc).lower().replace(" ", "-")
             entry = f'<label><input type="checkbox" class="dlc-checkbox" value="{normalized}" checked onchange="toggleDLC(\'{normalized}\')"> {dlc}</label>'
             entries.append(entry)
@@ -447,7 +449,8 @@ class IconSearchGenerator:
             sprites, sprite_files = self.read_section_gfx(cfg.get("paths", []))
             sections_data[section] = (sprites, sprite_files)
             gfx_files_list.append(sprite_files)
-        self.convert_images(gfx_files_list, self.config.modified_images)
+        if self.config.convert_images:
+            self.convert_images(gfx_files_list, self.config.modified_images)
         self.generate_html(sections_data)
         if self.bad_files:
             logging.warning("The following files had exceptions or other issues:")
