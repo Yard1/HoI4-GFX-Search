@@ -1,3 +1,5 @@
 /gfx/**/*.*
 !/gfx/**/*.png
+/dlc_gfx/**/*.*
+!/dlc_gfx/**/*.png
 interface/**

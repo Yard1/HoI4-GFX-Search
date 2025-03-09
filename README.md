@@ -14,6 +14,6 @@ Uses Skeleton CSS from http://getskeleton.com/ under MIT license & some styles f
 
 Thanks to Gaboemi and Zankoas for help updating to HoI4 1.10 and 1.11.
 
-Thanks to JPG for help updating to HoI4 1.12, 1.13 and 1.15.
+Thanks to JPG for help updating to HoI4 1.12, 1.13, 1.15 and 1.16.
 
 Thanks to hildagrim for help updating to HoI4 1.14.
