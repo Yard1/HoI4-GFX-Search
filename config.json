@@ -1,0 +1,169 @@
+{
+    "title": "HoI4 GFX Search",
+    "template_path": ".github-pages/index.template",
+    "favicon": "hoi4_icon.png",
+    "replace_date": true,
+    "sections": {
+      "goals": {
+        "paths": [
+          "./interface/**/*goals.gfx"
+        ],
+        "remove_str": null
+      },
+      "ideas": {
+        "paths": [
+          "./interface/**/*ideas.gfx"
+        ],
+        "remove_str": "GFX_idea_"
+      },
+      "character_ideas": {
+        "paths": [
+          "./interface/**/*ideas_characters.gfx"
+        ],
+        "remove_str": "GFX_idea_"
+      },
+      "texticons": {
+        "paths": [
+          "./interface/**/*texticons.gfx"
+        ]
+      },
+      "events": {
+        "paths": [
+          "./interface/**/*eventpictures.gfx"
+        ]
+      },
+      "newsevents": {
+        "paths": [
+          "./interface/**/*eventnewspictures.gfx"
+        ]
+      },
+      "agencies": {
+        "paths": [
+          "./interface/**/*countryintelligenceagencyview.gfx"
+        ]
+      },
+      "decisions": {
+        "paths": [
+          "./interface/**/*decisions.gfx"
+        ]
+      },
+      "decisionscat": {
+        "paths": [
+          "./interface/**/*decision_categories.gfx"
+        ]
+      },
+      "decisionspics": {
+        "paths": [
+          "./interface/**/*decision_category_pictures.gfx"
+        ]
+      }
+    },
+    "modified_images": [],
+    "dlcs": [
+      {
+        "name": "Arms Against Tyranny",
+        "gfx_folder": "./dlc_gfx/dlc038_arms_against_tyranny",
+        "interface_folders": [
+          "./interface/aat"
+        ]
+      },
+      {
+        "name": "Anniversary Pack",
+        "gfx_folder": "./dlc_gfx/dlc021_anniversary_pack",
+        "interface_folders": [
+          "./interface/ap"
+        ]
+      },
+      {
+        "name": "By Blood Alone",
+        "gfx_folder": "./dlc_gfx/dlc036_by_blood_alone",
+        "interface_folders": [
+          "./interface/bba"
+        ]
+      },
+      {
+        "name": "Battle for the Bosporus",
+        "gfx_folder": "./dlc_gfx/dlc031_battle_for_the_bosporus",
+        "interface_folders": [
+          "./interface/bftb"
+        ]
+      },
+      {
+        "name": "Death or Dishonor",
+        "gfx_folder": "./dlc_gfx/dlc020_death_or_dishonor",
+        "interface_folders": [
+          "./interface/dod"
+        ]
+      },
+      {
+        "name": "Historical German Portraits",
+        "gfx_folder": "./dlc_gfx/dlc001_german_historical_portraits",
+        "interface_folders": [
+          "./interface/ghp"
+        ]
+      },
+      {
+        "name": "Graveyard of Empires",
+        "gfx_folder": "./dlc_gfx/dlc046_graveyard_of_empires",
+        "interface_folders": [
+          "./interface/goe"
+        ]
+      },
+      {
+        "name": "Gotterdammerung",
+        "gfx_folder": "./dlc_gfx/dlc043_gotterdammerung",
+        "interface_folders": [
+          "./interface/gtd"
+        ]
+      },
+      {
+        "name": "La Resistance",
+        "gfx_folder": "./dlc_gfx/dlc028_la_resistance",
+        "interface_folders": [
+          "./interface/lar"
+        ]
+      },
+      {
+        "name": "Man the Guns",
+        "gfx_folder": "./dlc_gfx/dlc023_man_the_guns",
+        "interface_folders": [
+          "./interface/mtg"
+        ]
+      },
+      {
+        "name": "No Step Back",
+        "gfx_folder": "./dlc_gfx/dlc034_no_step_back",
+        "interface_folders": [
+          "./interface/nsb"
+        ]
+      },
+      {
+        "name": "Poland: United and Ready",
+        "gfx_folder": "./dlc_gfx/dlc002_polish_content_pack",
+        "interface_folders": [
+          "./interface/pol"
+        ]
+      },
+      {
+        "name": "Together for Victory",
+        "gfx_folder": "./dlc_gfx/dlc018_together_for_victory",
+        "interface_folders": [
+          "./interface/tfv"
+        ]
+      },
+      {
+        "name": "Trial of Allegiance",
+        "gfx_folder": "./dlc_gfx/dlc040_trial_of_allegiance",
+        "interface_folders": [
+          "./interface/toa"
+        ]
+      },
+      {
+        "name": "Waking the Tiger",
+        "gfx_folder": "./dlc_gfx/dlc022_waking_the_tiger",
+        "interface_folders": [
+          "./interface/wtt"
+        ]
+      }
+    ]
+  }
