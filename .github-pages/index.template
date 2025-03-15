@@ -318,10 +318,6 @@
       border-radius: 3px;
     }
 
-    .hidden {
-      display: none;
-    }
-
   </style>
 
   <link rel="icon" href="@FAVICON">
@@ -497,11 +493,7 @@
       const visibleSet = new Set(visibleIndices);
       requestAnimationFrame(() => {
         iconsElements.forEach((icon, i) => {
-          if (visibleSet.has(i)) {
-            icon.classList.remove("hidden");
-          } else {
-            icon.classList.add("hidden");
-          }
+          icon.style.display = visibleSet.has(i) ? "" : "none";
         });
       });
     }

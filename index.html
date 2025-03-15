@@ -318,10 +318,6 @@
       border-radius: 3px;
     }
 
-    .hidden {
-      display: none;
-    }
-
   </style>
 
   <link rel="icon" href="hoi4_icon.png">
@@ -36686,6 +36682,8 @@
     let iconsElements = [];
     let worker = null;
     let debounceTimeout;
+    // Cache the default state for when the search box is empty.
+    // The cache key will be a signature of the DLC filter state.
     let cachedDefaultState = { filterSignature: null, visibleIndices: null };
 
     // ---------------------------
@@ -36738,11 +36736,7 @@
       const visibleSet = new Set(visibleIndices);
       requestAnimationFrame(() => {
         iconsElements.forEach((icon, i) => {
-          if (visibleSet.has(i)) {
-            icon.classList.remove("hidden");
-          } else {
-            icon.classList.add("hidden");
-          }
+          icon.style.display = visibleSet.has(i) ? "" : "none";
         });
       });
     }
@@ -36763,10 +36757,12 @@
           updateIconsDisplay(cachedDefaultState.visibleIndices);
           return;
         } else {
+          // Compute the default state: show icons based solely on the DLC filters.
           const visibleIndices = [];
           for (let i = 0; i < iconsData.length; i++) {
             const icon = iconsData[i];
             let isVisibleByDLC = true;
+            // Process any hidedlc-* classes first.
             for (let j = 0; j < icon.hide.length; j++) {
               if (dlcFilters[icon.hide[j]]) {
                 isVisibleByDLC = false;
@@ -36774,6 +36770,7 @@
               }
             }
             if (!isVisibleByDLC) continue;
+            // If the icon has dlc-* classes, at least one must be enabled.
             if (icon.show.length > 0) {
               isVisibleByDLC = icon.show.some(dlcName => !!dlcFilters[dlcName]);
             }
@@ -36781,6 +36778,7 @@
               visibleIndices.push(icon.index);
             }
           }
+          // Cache the computed default state using the current DLC filters signature.
           cachedDefaultState.filterSignature = currentSignature;
           cachedDefaultState.visibleIndices = visibleIndices;
           updateIconsDisplay(visibleIndices);
@@ -36795,6 +36793,7 @@
         const visibleIndices = [];
         for (let i = 0; i < iconsData.length; i++) {
           const icon = iconsData[i];
+          // Check if icon's search text includes every filter word.
           let matchesSearch = filterWords.every(word => icon.searchText.indexOf(word.trim()) !== -1);
           if (!matchesSearch) continue;
           let isVisibleByDLC = true;
@@ -36862,7 +36861,7 @@
     }
 
     // ---------------------------
-    // Setup the Web Worker (if supported)
+    // Setup the Web Worker
     // ---------------------------
     if (window.Worker) {
       const workerCode = `
@@ -36917,7 +36916,7 @@
     });
 
     // ---------------------------
-    //Clipboard & Tooltip
+    // Clipboard & Tooltip
     // ---------------------------
     const iconElements = document.getElementsByClassName('icon');
     for (let i = 0; i < iconElements.length; i++) {
