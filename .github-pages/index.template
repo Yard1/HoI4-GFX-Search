@@ -317,6 +317,11 @@
       padding: 2px 4px;
       border-radius: 3px;
     }
+
+    .hidden {
+      display: none;
+    }
+
   </style>
 
   <link rel="icon" href="@FAVICON">
@@ -329,7 +334,7 @@
     </section>
     <div id="app">
       <div class="search-bar">
-        <input type="text" id="searchInput" onkeyup="searchIcons()" placeholder="Search for icons..">
+        <input type="text" id="searchInput" placeholder="Search for icons..">
       </div>
       
       <!-- DLC Dropdown -->
@@ -430,168 +435,298 @@
     </footer>
   </div>
 </body>
-<script>
-  // HoI4 Mod Icon Search by Yard1 
-  // Based on code from https://www.w3schools.com/
-
-  function searchIcons() {
-    var input, filter, div, i, txtValue;
-    input = document.getElementById('searchInput');
-    filter = input.value.toUpperCase().split(' ');
-    div = document.getElementsByClassName("icon");
-
-    // First apply search filter
-    for (i = 0; i < div.length; i++) {
-      txtValue = div[i].getAttribute("data-search-text").toUpperCase();
-      if (filter.every(function (element) {
-        return txtValue.indexOf(element.trim()) != -1;
-      })) {
-        // Icon matches search text, now check if it should be visible based on DLC filter
-        if (isIconVisibleByDLC(div[i])) {
-          div[i].style.display = "";
-        } else {
-          div[i].style.display = "none";
-        }
-      } else {
-        div[i].style.display = "none";
-      }
-    }
-  }
-
-  function isIconVisibleByDLC(iconElement) {
-    // Get all DLC checkboxes
-    var dlcCheckboxes = document.querySelectorAll('.dlc-checkbox');
-    var iconVisible = true;
-    
-    // Get all classes from the icon
-    var iconClasses = iconElement.className.split(' ');
-    
-    // First check if there are any hidedlc-DLC classes that should hide this icon
-    for (var i = 0; i < iconClasses.length; i++) {
-      if (iconClasses[i].startsWith('hidedlc-')) {
-        var dlcToHide = iconClasses[i].substring(8); // Remove 'hidedlc-' prefix
-        // Check if the corresponding DLC checkbox is checked
-        for (var j = 0; j < dlcCheckboxes.length; j++) {
-          if (dlcCheckboxes[j].value === dlcToHide && dlcCheckboxes[j].checked) {
-            // This DLC is checked, so we should hide this icon
-            return false;
-          }
-        }
-      }
-    }
-    
-    // Now check if there are any dlc-DLC classes that should show this icon
-    var hasDLCClass = false;
-    var isVisibleByDLC = false;
-    
-    for (var i = 0; i < iconClasses.length; i++) {
-      if (iconClasses[i].startsWith('dlc-')) {
-        hasDLCClass = true;
-        var dlcName = iconClasses[i].substring(4); // Remove 'dlc-' prefix
-        // Check if the corresponding DLC checkbox is checked
-        for (var j = 0; j < dlcCheckboxes.length; j++) {
-          if (dlcCheckboxes[j].value === dlcName && dlcCheckboxes[j].checked) {
-            isVisibleByDLC = true;
-            break;
-          }
-        }
-        if (isVisibleByDLC) {
-          break;
-        }
-      }
-    }
-    
-    // If the icon doesn't have a DLC class, it's part of the base game, so show it
-    // unless it was already hidden by a hidedlc- class
-    if (!hasDLCClass) {
-      return true;
-    }
-    
-    return isVisibleByDLC;
-  }
-
-  function toggleDLC(dlcName) {
-    // After toggling a DLC checkbox, refresh the icon display
-    searchIcons();
-  }
-
-  function selectAllDLCs(select) {
-    var dlcCheckboxes = document.querySelectorAll('.dlc-checkbox');
-    for (var i = 0; i < dlcCheckboxes.length; i++) {
-      dlcCheckboxes[i].checked = select;
-    }
-    // Refresh the icon display
-    searchIcons();
-  }
-
-  function toggleIcons(id) {
-    var checkBox = document.getElementById(id + '-toggle');
-    var elementToHide = document.getElementById(id);
-
-    if (checkBox.checked == true) {
-      elementToHide.style.display = "block";
-    } else {
-      elementToHide.style.display = "none";
-    }
-  }
-
-  var btns = document.getElementsByClassName('icon');
-  for (var i = 0; i < btns.length; i++) {
-    btns[i].addEventListener('mouseleave', clearTooltip);
-    btns[i].addEventListener('blur', clearTooltip);
-  }
-  function clearTooltip(e) {
-    e.currentTarget.setAttribute('class', e.currentTarget.getAttribute('class').replace(' tooltipped tooltipped-s', ''));
-    e.currentTarget.removeAttribute('aria-label');
-  }
-  function showTooltip(elem, msg) {
-    elem.setAttribute('class', elem.getAttribute('class') + ' tooltipped tooltipped-s');
-    elem.setAttribute('aria-label', msg);
-  }
-  function fallbackMessage(action) {
-    var actionMsg = '';
-    var actionKey = (action === 'cut' ? 'X' : 'C');
-    if (/iPhone|iPad/i.test(navigator.userAgent)) {
-      actionMsg = 'No support :(';
-    } else if (/Mac/i.test(navigator.userAgent)) {
-      actionMsg = 'Press ⌘-' + actionKey + ' to ' + action;
-    } else {
-      actionMsg = 'Press Ctrl-' + actionKey + ' to ' + action;
-    }
-    return actionMsg;
-  }
-  function hideEmptySections() {
-    var containers = document.getElementsByClassName('icon-container');
-    var index, len, button;
-    for (index = 0, len = containers.length; index < len; ++index) {
-        if (containers[index].children.length < 1) {
-          button = document.getElementById(containers[index].parentElement.id + '-toggle');
-          button.checked = false;
-          button.parentElement.style.display = "none";
-          containers[index].parentElement.style.display = "none";
-        }
-    }
-    // Apply initial DLC filtering
-    searchIcons();
-  }
-  document.addEventListener("DOMContentLoaded", hideEmptySections());
-</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js"></script>
 <script>
-  var icon = document.getElementsByClassName('icon');
-  var clipboard = new ClipboardJS(icon);
-  clipboard.on('success', function (e) {
-    e.clearSelection();
-    console.info('Action:', e.action);
-    console.info('Text:', e.text);
-    console.info('Trigger:', e.trigger);
-    showTooltip(e.trigger, 'Copied name to clipboard!');
-  });
-  clipboard.on('error', function (e) {
-    console.error('Action:', e.action);
-    console.error('Trigger:', e.trigger);
-    showTooltip(e.trigger, fallbackMessage(e.action));
-  });
+  (function() {
+    // Global variables for precomputed data, worker instance, and default state cache
+    let iconsData = [];
+    let iconsElements = [];
+    let worker = null;
+    let debounceTimeout;
+    // Cache the default state for when the search box is empty.
+    // The cache key will be a signature of the DLC filter state.
+    let cachedDefaultState = { filterSignature: null, visibleIndices: null };
+
+    // ---------------------------
+    // Precompute Icon Data
+    // ---------------------------
+    function precomputeIcons() {
+      const icons = document.getElementsByClassName("icon");
+      iconsData = [];
+      iconsElements = Array.from(icons);
+      for (let i = 0; i < iconsElements.length; i++) {
+        const icon = iconsElements[i];
+        icon.dataset.iconIndex = i; // Save index as a data attribute
+        const searchText = icon.getAttribute("data-search-text") || "";
+        const searchTextUC = searchText.toUpperCase();
+        icon.setAttribute("data-search-text-uc", searchTextUC);
+        
+        // Precompute DLC-related class info:
+        // - "dlc-*" classes indicate the icon is shown when that DLC is enabled.
+        // - "hidedlc-*" classes indicate the icon is hidden when that DLC is enabled.
+        const classes = icon.className.split(" ");
+        const dlcShow = [];
+        const dlcHide = [];
+        classes.forEach(cls => {
+          if (cls.startsWith("dlc-")) {
+            dlcShow.push(cls.substring(4));
+          } else if (cls.startsWith("hidedlc-")) {
+            dlcHide.push(cls.substring(8));
+          }
+        });
+        iconsData.push({ index: i, searchText: searchTextUC, show: dlcShow, hide: dlcHide });
+      }
+    }
+
+    // ---------------------------
+    // Cache DLC Checkbox States
+    // ---------------------------
+    function getDLCFilters() {
+      const filters = {};
+      const dlcCheckboxes = document.querySelectorAll('.dlc-checkbox');
+      dlcCheckboxes.forEach(checkbox => {
+        filters[checkbox.value] = checkbox.checked;
+      });
+      return filters;
+    }
+
+    // ---------------------------
+    // Batch DOM Updates via Class Toggling
+    // ---------------------------
+    function updateIconsDisplay(visibleIndices) {
+      const visibleSet = new Set(visibleIndices);
+      requestAnimationFrame(() => {
+        iconsElements.forEach((icon, i) => {
+          if (visibleSet.has(i)) {
+            icon.classList.remove("hidden");
+          } else {
+            icon.classList.add("hidden");
+          }
+        });
+      });
+    }
+
+    // ---------------------------
+    // Filtering Logic with Default State Caching
+    // ---------------------------
+    function processFiltering() {
+      const input = document.getElementById('searchInput');
+      const filterWords = input.value.toUpperCase().split(' ').filter(w => w.trim() !== "");
+      const dlcFilters = getDLCFilters();
+      
+      // If search box is empty, try to revert to the cached default state.
+      if (filterWords.length === 0) {
+        const currentSignature = JSON.stringify(dlcFilters);
+        if (cachedDefaultState.filterSignature === currentSignature &&
+            cachedDefaultState.visibleIndices) {
+          updateIconsDisplay(cachedDefaultState.visibleIndices);
+          return;
+        } else {
+          // Compute the default state: show icons based solely on the DLC filters.
+          const visibleIndices = [];
+          for (let i = 0; i < iconsData.length; i++) {
+            const icon = iconsData[i];
+            let isVisibleByDLC = true;
+            // Process any hidedlc-* classes first.
+            for (let j = 0; j < icon.hide.length; j++) {
+              if (dlcFilters[icon.hide[j]]) {
+                isVisibleByDLC = false;
+                break;
+              }
+            }
+            if (!isVisibleByDLC) continue;
+            // If the icon has dlc-* classes, at least one must be enabled.
+            if (icon.show.length > 0) {
+              isVisibleByDLC = icon.show.some(dlcName => !!dlcFilters[dlcName]);
+            }
+            if (isVisibleByDLC) {
+              visibleIndices.push(icon.index);
+            }
+          }
+          // Cache the computed default state using the current DLC filters signature.
+          cachedDefaultState.filterSignature = currentSignature;
+          cachedDefaultState.visibleIndices = visibleIndices;
+          updateIconsDisplay(visibleIndices);
+          return;
+        }
+      }
+
+      // For non-empty search input, perform filtering.
+      if (worker) {
+        worker.postMessage({ iconsData, filterWords, dlcFilters });
+      } else {
+        const visibleIndices = [];
+        for (let i = 0; i < iconsData.length; i++) {
+          const icon = iconsData[i];
+          // Check if icon's search text includes every filter word.
+          let matchesSearch = filterWords.every(word => icon.searchText.indexOf(word.trim()) !== -1);
+          if (!matchesSearch) continue;
+          let isVisibleByDLC = true;
+          for (let j = 0; j < icon.hide.length; j++) {
+            if (dlcFilters[icon.hide[j]]) {
+              isVisibleByDLC = false;
+              break;
+            }
+          }
+          if (!isVisibleByDLC) continue;
+          if (icon.show.length > 0) {
+            isVisibleByDLC = icon.show.some(dlcName => !!dlcFilters[dlcName]);
+          }
+          if (isVisibleByDLC) {
+            visibleIndices.push(icon.index);
+          }
+        }
+        updateIconsDisplay(visibleIndices);
+      }
+    }
+
+    // ---------------------------
+    // Debounce the Filtering Call
+    // ---------------------------
+    function debouncedSearch() {
+      clearTimeout(debounceTimeout);
+      debounceTimeout = setTimeout(processFiltering, 300);
+    }
+
+    // ---------------------------
+    // Section and DLC Toggle Helpers
+    // ---------------------------
+    function toggleIcons(id) {
+      const checkBox = document.getElementById(id + '-toggle');
+      const elementToHide = document.getElementById(id);
+      elementToHide.style.display = checkBox.checked ? "block" : "none";
+    }
+
+    function toggleDLC() {
+      processFiltering();
+    }
+
+    function selectAllDLCs(select) {
+      const dlcCheckboxes = document.querySelectorAll('.dlc-checkbox');
+      dlcCheckboxes.forEach(checkbox => {
+        checkbox.checked = select;
+      });
+      processFiltering();
+    }
+
+    function hideEmptySections() {
+      const containers = document.getElementsByClassName('icon-container');
+      for (let index = 0; index < containers.length; index++) {
+        if (containers[index].children.length < 1) {
+          const sectionId = containers[index].parentElement.id;
+          const button = document.getElementById(sectionId + '-toggle');
+          if (button) {
+            button.checked = false;
+            button.parentElement.style.display = "none";
+          }
+          containers[index].parentElement.style.display = "none";
+        }
+      }
+      processFiltering();
+    }
+
+    // ---------------------------
+    // Setup the Web Worker
+    // ---------------------------
+    if (window.Worker) {
+      const workerCode = `
+        self.onmessage = function(e) {
+          const { iconsData, filterWords, dlcFilters } = e.data;
+          const visibleIndices = [];
+          for (let i = 0; i < iconsData.length; i++) {
+            const icon = iconsData[i];
+            let matchesSearch = filterWords.every(word => icon.searchText.indexOf(word.trim()) !== -1);
+            if (!matchesSearch) continue;
+            let isVisibleByDLC = true;
+            for (let j = 0; j < icon.hide.length; j++) {
+              if (dlcFilters[icon.hide[j]]) {
+                isVisibleByDLC = false;
+                break;
+              }
+            }
+            if (!isVisibleByDLC) continue;
+            if (icon.show.length > 0) {
+              isVisibleByDLC = icon.show.some(dlcName => !!dlcFilters[dlcName]);
+            }
+            if (isVisibleByDLC) {
+              visibleIndices.push(icon.index);
+            }
+          }
+          self.postMessage({ visibleIndices });
+        };
+      `;
+      const blob = new Blob([workerCode], { type: 'application/javascript' });
+      worker = new Worker(URL.createObjectURL(blob));
+      worker.onmessage = function(e) {
+        const { visibleIndices } = e.data;
+        updateIconsDisplay(visibleIndices);
+      };
+    }
+
+    // ---------------------------
+    // DOMContentLoaded Setup
+    // ---------------------------
+    document.addEventListener("DOMContentLoaded", function() {
+      precomputeIcons();
+
+      const searchInput = document.getElementById('searchInput');
+      searchInput.addEventListener('keyup', debouncedSearch);
+
+      const dlcCheckboxes = document.querySelectorAll('.dlc-checkbox');
+      dlcCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', debouncedSearch);
+      });
+
+      hideEmptySections();
+    });
+
+    // ---------------------------
+    // Clipboard & Tooltip
+    // ---------------------------
+    const iconElements = document.getElementsByClassName('icon');
+    for (let i = 0; i < iconElements.length; i++) {
+      iconElements[i].addEventListener('mouseleave', clearTooltip);
+      iconElements[i].addEventListener('blur', clearTooltip);
+    }
+    function clearTooltip(e) {
+      e.currentTarget.setAttribute('class', e.currentTarget.getAttribute('class').replace(' tooltipped tooltipped-s', ''));
+      e.currentTarget.removeAttribute('aria-label');
+    }
+    function showTooltip(elem, msg) {
+      elem.setAttribute('class', elem.getAttribute('class') + ' tooltipped tooltipped-s');
+      elem.setAttribute('aria-label', msg);
+    }
+    function fallbackMessage(action) {
+      let actionMsg = '';
+      let actionKey = (action === 'cut' ? 'X' : 'C');
+      if (/iPhone|iPad/i.test(navigator.userAgent)) {
+        actionMsg = 'No support :(';
+      } else if (/Mac/i.test(navigator.userAgent)) {
+        actionMsg = 'Press ⌘-' + actionKey + ' to ' + action;
+      } else {
+        actionMsg = 'Press Ctrl-' + actionKey + ' to ' + action;
+      }
+      return actionMsg;
+    }
+    var clipboard = new ClipboardJS('.icon');
+    clipboard.on('success', function (e) {
+      e.clearSelection();
+      console.info('Action:', e.action);
+      console.info('Text:', e.text);
+      console.info('Trigger:', e.trigger);
+      showTooltip(e.trigger, 'Copied name to clipboard!');
+    });
+    clipboard.on('error', function (e) {
+      console.error('Action:', e.action);
+      console.error('Trigger:', e.trigger);
+      showTooltip(e.trigger, fallbackMessage(e.action));
+    });
+
+    // Expose functions to the global scope for inline HTML calls.
+    window.toggleIcons = toggleIcons;
+    window.toggleDLC = toggleDLC;
+    window.selectAllDLCs = selectAllDLCs;
+  })();
 </script>
 
 </html>

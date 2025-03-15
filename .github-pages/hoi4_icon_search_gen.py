@@ -375,7 +375,7 @@ class IconSearchGenerator:
                         added = True
                     entry = (
                         f'\n          <div data-clipboard-text="{name}" data-search-text="{name}" title="{name}" class="icon{maybe_dlc_str}">\n'
-                        f'            <img src="{img_src}" alt="{name}">\n'
+                        f'            <img src="{img_src}" loading="lazy" alt="{name}">\n'
                         "          </div>\n        "
                     )
                     icon_entries.append(entry)
