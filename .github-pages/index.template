@@ -384,6 +384,10 @@
           <input id="decisionsPicsSection-toggle" type="checkbox" onclick="toggleIcons('decisionsPicsSection')" checked>
           <span class="button toggle-button-span">Decision Category Pictures</span>
         </label>
+        <label class="toggle-button">
+          <input id="factionsSection-toggle" type="checkbox" onclick="toggleIcons('factionsSection')" checked>
+          <span class="button toggle-button-span">Factions</span>
+        </label>
       </div>
       <div id="goalsSection" class="docs-section">
         <h6 class="docs-header">National focuses (@GOALS_NUM)</h6>
@@ -424,6 +428,10 @@
       <div id="decisionsPicsSection" class="docs-section">
         <h6 class="docs-header">Decision Category Pictures (@DECISIONSPICS_NUM)</h6>
         <div class="icon-container flex flex-wrap justify-left mt-3">@DECISIONSPICS_ICONS</div>
+      </div>
+      <div id="factionsSection" class="docs-section">
+        <h6 class="docs-header">Factions (@FACTIONS_NUM)</h6>
+        <div class="icon-container flex flex-wrap justify-left mt-3">@FACTIONS_ICONS</div>
       </div>
     </div>
     <footer>

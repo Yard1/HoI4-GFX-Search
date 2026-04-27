@@ -1,6 +1,6 @@
 {
     "title": "HoI4 GFX Search",
-    "template_path": ".github-pages/index.template",
+    "template_path": "index.template",
     "favicon": "hoi4_icon.png",
     "replace_date": true,
     "convert_images": true,
@@ -56,6 +56,11 @@
       "decisionspics": {
         "paths": [
           "./interface/**/*decision_category_pictures.gfx"
+        ]
+      },
+      "factions": {
+        "paths": [
+          "./interface/factions/factions.gfx"
         ]
       }
     },
@@ -164,6 +169,20 @@
         "gfx_folder": "./dlc_gfx/dlc022_waking_the_tiger",
         "interface_folders": [
           "./interface/wtt"
+        ]
+      },
+      {
+        "name": "No Compromise, No Surrender",
+        "gfx_folder": "./dlc_gfx/dlc049_no_compromise_no_surrender",
+        "interface_folders": [
+          "./interface/ncns"
+        ]
+      },
+      {
+        "name": "Peace for our time",
+        "gfx_folder": "./dlc_gfx/dlc051_peace_for_our_time",
+        "interface_folders": [
+          "./interface/pfot"
         ]
       }
     ]
